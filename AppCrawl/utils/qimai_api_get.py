@@ -43,7 +43,7 @@ class GetDynamicAPI(object):
         s = base64.b64encode(bytes(self.encrypt(s), encoding="ascii"))
         # 拼接 URL
         self.params["analysis"] = s.decode()
-        url = "https://api.qimai.cn/rank/release/1?{}".format(urlencode(self.params))
+        url = "https://api.qimai.cn/rank/release?{}".format(urlencode(self.params))
         # 发起请求
         return url
 

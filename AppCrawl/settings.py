@@ -21,6 +21,8 @@ NEWSPIDER_MODULE = 'AppCrawl.spiders'
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = False
 
+USER_AGENT = "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:51.0) Gecko/20100101 Firefox/51.0"
+
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
 #CONCURRENT_REQUESTS = 32
 
@@ -52,9 +54,10 @@ ROBOTSTXT_OBEY = False
 
 # Enable or disable downloader middlewares
 # See https://doc.scrapy.org/en/latest/topics/downloader-middleware.html
-#DOWNLOADER_MIDDLEWARES = {
+DOWNLOADER_MIDDLEWARES = {
 #    'AppCrawl.middlewares.AppcrawlDownloaderMiddleware': 543,
-#}
+    'AppCrawl.middlewares.RandomUserAgentMiddlware': 543,
+}
 
 # Enable or disable extensions
 # See https://doc.scrapy.org/en/latest/topics/extensions.html

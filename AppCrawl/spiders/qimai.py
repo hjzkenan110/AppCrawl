@@ -1,10 +1,13 @@
 # -*- coding: utf-8 -*-
-import scrapy
+import json
 
+import scrapy
+from AppCrawl.utils.qimai_api_get import GetDynamicAPI
 
 class QimaiSpider(scrapy.Spider):
     name = 'qimai'
-    start_urls = ['http://www.qimai.com/']
+    url = GetDynamicAPI("2018-06-20", 1).main()
+    start_urls = [url]
 
     def parse(self, response):
-        pass
+        print(response.body)
