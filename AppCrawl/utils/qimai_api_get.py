@@ -6,12 +6,6 @@ from urllib.parse import urlencode
 
 class GetDynamicAPI(object):
     def __init__(self, date=time.strftime("%Y-%m-%d"), page=1):
-        self.headers = {
-            "Accept": "application/json, text/plain, */*",
-            "Referer": "https://www.qimai.cn/rank/release",
-            "User-Agent": "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:57.0) Gecko/20100101 Firefox/59.0"
-        }
-
         self.params = {
             # "country": "cn",
             "date": date,
