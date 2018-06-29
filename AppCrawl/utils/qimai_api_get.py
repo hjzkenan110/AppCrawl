@@ -1,11 +1,24 @@
 import base64
 import http.cookiejar as cookielib
 import json
+import random
+import ssl
+import string
 import time
 from urllib.parse import urlencode, urljoin
 
 import requests
 
+AGENT = "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:51.0) Gecko/20100101 Firefox/51.0"
+HEADER = {
+    "HOST" : "api.qimai.cn",
+    "Referer" : "https://www.qimai.cn/rank/release",
+    'User-Agent' : AGENT,
+    "Accept-Encoding" : "gzip, deflate, br",
+    "Accept-Language" : "zh-CN,zh;q=0.9,en-US;q=0.8,en;q=0.7"
+}
+
+ssl._create_default_https_context = ssl._create_unverified_context
 
 class GetDynamicAPI(object):
     def __init__(self, middle_url=None, **kargs):
@@ -51,14 +64,7 @@ def qimai_login(account, password):
     except:
         print ("cookie未能加载")
 
-    agent = "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:51.0) Gecko/20100101 Firefox/51.0"
-    header = {
-        "HOST":"www.zhihu.com",
-        "Referer": "https://www.zhizhu.com",
-        'User-Agent': agent
-    }
-
-    response = session.get("https://www.qimai.cn/rank/release")
+    response = session.get("https://www.qimai.cn/rank/release", allow_redirects=False))
 
 def is_login():
     #通过返回json内容来判断是否为登录状态
