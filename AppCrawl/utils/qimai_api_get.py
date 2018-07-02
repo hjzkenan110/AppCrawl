@@ -2,11 +2,11 @@ import base64
 import http.cookiejar as cookielib
 import json
 import random
-import ssl
 import string
 import time
 from urllib.parse import urlencode, urljoin
-
+from requests.cookies import RequestsCookieJar
+from requests.utils import dict_from_cookiejar
 import requests
 
 AGENT = "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:51.0) Gecko/20100101 Firefox/51.0"
@@ -17,8 +17,6 @@ HEADER = {
     "Accept-Encoding" : "gzip, deflate, br",
     "Accept-Language" : "zh-CN,zh;q=0.9,en-US;q=0.8,en;q=0.7"
 }
-
-ssl._create_default_https_context = ssl._create_unverified_context
 
 class GetDynamicAPI(object):
     def __init__(self, middle_url=None, **kargs):
@@ -56,27 +54,57 @@ class GetDynamicAPI(object):
         return url
 
 def qimai_login(account, password):
+    # 获取登陆的api接口
     signin_api = GetDynamicAPI(middle_url=3).get_url()
+    post_data = {
+                "username": account,
+                "password": password,
+            }
+
     session = requests.session()
-    session.cookies = cookielib.LWPCookieJar(filename="cookies.txt")
-    try:
-        session.cookies.load(ignore_discard=True)
-    except:
-        print ("cookie未能加载")
 
-    response = session.get("https://www.qimai.cn/rank/release", allow_redirects=False))
+    # session.cookies = cookielib.LWPCookieJar(filename="cookies.txt")
+    # try:
+    #     session.cookies.load(ignore_discard=True)
+    # except:
+    #     print ("cookie未能加载")
+    
+    sessionID = ''.join(random.sample(string.ascii_letters + string.digits, 26))
+    session.cookies['PHPSESSID'] = sessionID
+    print(sessionID)
+    session.post(signin_api, data=post_data, verify=False, allow_redirects=False)
+    
+    cookies = dict_from_cookiejar(session.cookies)
+    with open("cook.txt", "w") as fp:
+        json.dump(cookies, fp)
 
-def is_login():
-    #通过返回json内容来判断是否为登录状态
-    test_url = GetDynamicAPI(middle_url=1, genre=36, page=41, date="2018-06-27").get_url()
-    response = session.get(test_url, headers=header)
-    if response.status_code != 200:
+    
+def judge_login():
+    #通过返回json内容来判断是否为登录状态'
+    session = requests.session()
+    jar = RequestsCookieJar()
+    with open("cook.txt", "r") as fp:
+        cookies = json.load(fp)
+        for key, value in cookies.items():
+            jar.set(key, value)
+
+    test_url = GetDynamicAPI(middle_url=1, genre=36, page=10, date="2018-06-27").get_url()
+    response = session.get(test_url, headers=HEADER, cookies=jar, verify=False)
+    print(response.text)
+    res = json.loads(response.text)
+    if res["code"] == 10011:
         return False
-    else:
+    elif res["code"] == 10000:
         return True
+    else:
+        print("Others condition!")
 
+    
 if __name__ == '__main__':
     # c1 = GetDynamicAPI(middle_url = 1, appid = "1391039541", country = "cn")
-    c2 = GetDynamicAPI(middle_url=1, genre=36, page=41, date="2018-06-27")
+    c2 = GetDynamicAPI(middle_url=1, genre=36, page=1, date="2018-07-01")
     # c3 = GetDynamicAPI(middle_url=3)
     print(c2.get_url())
+    # qimai_login("15816659260", "qm15382936271b")
+    # a = judge_login()
+    # print(a)
