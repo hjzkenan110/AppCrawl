@@ -6,6 +6,8 @@ import scrapy
 from scrapy.http.cookies import CookieJar
 from AppCrawl.utils.qimai_api_get import GetDynamicAPI, qimai_login, judge_login
 
+from AppCrawl.items import qimaiItemLoader, qimaiItem
+
 AGENT = "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:51.0) Gecko/20100101 Firefox/51.0"
 HEADER = {
     "HOST" : "api.qimai.cn",
@@ -33,8 +35,21 @@ class QimaiSpider(scrapy.Spider):
         maxPage, nowPage = int(page_info["maxPage"]), response.meta["nowPage"]
         
         rank_info = page_info["rankInfo"]
-        for app_info in rank_info:
-            
+        for info in rank_info:
+            app_info = info["appInfo"]
+            item_loader = qimaiItemLoader(item=qimaiItem(), response=response)
+            item_loader.add_value("appId", app_info["appId"])
+            item_loader.add_value("appName", app_info["appName"])
+            item_loader.add_value("icon", app_info["icon"])
+            item_loader.add_value("publisher", app_info["publisher"])
+            item_loader.add_value("country", app_info["country"])
+            item_loader.add_value("genre", info["genre"])
+            item_loader.add_value("price", info["price"])
+            item_loader.add_value("releaseTime", info["releaseTime"])
+
+            qimai_item = item_loader.load_item()
+            yield qimai_item
+
 
         if (maxPage > nowPage):
             nowPage += 1
@@ -43,12 +58,12 @@ class QimaiSpider(scrapy.Spider):
                 with open('cook.txt', 'r') as f:
                     cookiejar = f.read()
                 cookiejar = eval(cookiejar)
-                yield scrapy.Request(url, meta={"nowPage":1, "nowDate":date})
 
             else:
-                qimai_login("15816659260", "qm15382936271b")
+                qimai_login("15816659260", "qwe123")
                 with open('cook.txt', 'r') as f:
                     cookiejar = f.read()
                 cookiejar = eval(cookiejar)
-                yield scrapy.Request(url=c1, meta={"nowPage":nowPage, "nowDate":response.meta["nowDate"]}, cookies = cookiejar, callback=self.parse)
+            
+            yield scrapy.Request(url=c1, meta={"nowPage":nowPage, "nowDate":response.meta["nowDate"]}, cookies = cookiejar, callback=self.parse)
         

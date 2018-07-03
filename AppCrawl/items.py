@@ -29,27 +29,3 @@ class qimaiItem(scrapy.Item):
     genre = scrapy.Field()
     price= scrapy.Field()
     releaseTime= scrapy.Field()
-
-    create_date = scrapy.Field(
-        input_processor=MapCompose(date_convert),
-    )
-    url = scrapy.Field()
-    url_object_id = scrapy.Field()
-    front_image_url = scrapy.Field(
-        output_processor=MapCompose(return_value)
-    )
-    front_image_path = scrapy.Field()
-    praise_nums = scrapy.Field(
-        input_processor=MapCompose(get_nums)
-    )
-    comment_nums = scrapy.Field(
-        input_processor=MapCompose(get_nums)
-    )
-    fav_nums = scrapy.Field(
-        input_processor=MapCompose(get_nums)
-    )
-    tags = scrapy.Field(
-        input_processor=MapCompose(remove_comment_tags),
-        output_processor=Join(",")
-    )
-    content = scrapy.Field()

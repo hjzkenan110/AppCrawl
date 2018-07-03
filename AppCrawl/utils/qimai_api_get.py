@@ -105,6 +105,6 @@ if __name__ == '__main__':
     c2 = GetDynamicAPI(middle_url=1, genre=36, page=1, date="2018-07-01")
     # c3 = GetDynamicAPI(middle_url=3)
     print(c2.get_url())
-    # qimai_login("15816659260", "qm15382936271b")
+    # qimai_login("15816659260", "qwe123")
     # a = judge_login()
     # print(a)
