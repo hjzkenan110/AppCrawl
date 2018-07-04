@@ -25,6 +25,9 @@ USER_AGENT = "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:51.0) Gecko/20100101 Firefo
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
 #CONCURRENT_REQUESTS = 32
+RANDOMIZE_DOWNLOAD_DELAY=False
+DOWNLOAD_DELAY=60/40.0
+CONCURRENT_REQUESTS_PER_IP=40
 
 # Configure a delay for requests for the same website (default: 0)
 # See https://doc.scrapy.org/en/latest/topics/settings.html#download-delay
@@ -68,7 +71,8 @@ DOWNLOADER_MIDDLEWARES = {
 # Configure item pipelines
 # See https://doc.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
-   'AppCrawl.pipelines.MysqlPipeline': 300,
+   'AppCrawl.pipelines.MysqlTwistedPipline': 2,
+   'AppCrawl.pipelines.ElasticsearchPipeline': 1
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)
@@ -94,4 +98,4 @@ ITEM_PIPELINES = {
 MYSQL_HOST = "127.0.0.1"
 MYSQL_DBNAME = "appdata"
 MYSQL_USER = "root"
-MYSQL_PASSWORD = "rexueyouxi666"
+MYSQL_PASSWORD = ""
