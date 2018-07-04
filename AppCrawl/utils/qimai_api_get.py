@@ -71,7 +71,7 @@ def qimai_login(account, password):
     
     sessionID = ''.join(random.sample(string.ascii_letters + string.digits, 26))
     session.cookies['PHPSESSID'] = sessionID
-    print(sessionID)
+    # print(sessionID)
     session.post(signin_api, data=post_data, verify=False, allow_redirects=False)
     
     cookies = dict_from_cookiejar(session.cookies)
@@ -90,7 +90,7 @@ def judge_login():
 
     test_url = GetDynamicAPI(middle_url=1, genre=36, page=10, date="2018-06-27").get_url()
     response = session.get(test_url, headers=HEADER, cookies=jar, verify=False)
-    print(response.text)
+    # print(response.text)
     res = json.loads(response.text)
     if res["code"] == 10011:
         return False
@@ -102,9 +102,12 @@ def judge_login():
     
 if __name__ == '__main__':
     # c1 = GetDynamicAPI(middle_url = 1, appid = "1391039541", country = "cn")
-    c2 = GetDynamicAPI(middle_url=1, genre=36, page=1, date="2018-07-01")
+    #c2 = GetDynamicAPI(middle_url=1, genre=36, page=1, date="2018-07-01")
     # c3 = GetDynamicAPI(middle_url=3)
-    print(c2.get_url())
+    #print(c2.get_url())
     # qimai_login("15816659260", "qwe123")
-    # a = judge_login()
-    # print(a)
+    a = judge_login()
+    if a == False:
+        print(a)
+    if a == True:
+        print("AMD YES!")

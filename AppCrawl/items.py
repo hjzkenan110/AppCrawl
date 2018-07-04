@@ -29,3 +29,16 @@ class qimaiItem(scrapy.Item):
     genre = scrapy.Field()
     price= scrapy.Field()
     releaseTime= scrapy.Field()
+
+    def get_insert_sql(self):
+        #插入的sql语句
+        insert_sql = """
+            insert IGNORE into appinfo(appId, appName, icon, publisher, country, genre, price, releaseTime)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+        """
+        params = (
+            self["appId"], self["appName"], self["icon"], self["publisher"], \
+            self["country"], self["genre"], self["price"], self["releaseTime"]
+        )
+
+        return insert_sql, params
