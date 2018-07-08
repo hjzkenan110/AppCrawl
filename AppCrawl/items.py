@@ -41,10 +41,15 @@ class qimaiItem(scrapy.Item):
     publisher = scrapy.Field()
     country = scrapy.Field()
     genre = scrapy.Field()
+<<<<<<< HEAD
     price= scrapy.Field(
         input_processor=MapCompose(get_price)
     )
     releaseTime = scrapy.Field()
+=======
+    price= scrapy.Field()
+    releaseTime= scrapy.Field()
+>>>>>>> 3799fbc4abf287e45352812957705dc057da7e26
 
     def get_insert_sql(self):
         #插入的sql语句
@@ -57,6 +62,7 @@ class qimaiItem(scrapy.Item):
             self["country"], self["genre"], self["price"], self["releaseTime"]
         )
 
+<<<<<<< HEAD
         return insert_sql, params
 
 # {
@@ -71,3 +77,6 @@ class qimaiItem(scrapy.Item):
 # 	"price": "免费",
 # 	"releaseTime": "2018-07-08"
 # }
+=======
+        return insert_sql, params
+>>>>>>> 3799fbc4abf287e45352812957705dc057da7e26

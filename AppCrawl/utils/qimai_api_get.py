@@ -111,4 +111,8 @@ if __name__ == '__main__':
     if a == False:
         print(a)
     if a == True:
+<<<<<<< HEAD
         print("AMD YES!")
+=======
+        print("AMD YES!")
+>>>>>>> 3799fbc4abf287e45352812957705dc057da7e26
