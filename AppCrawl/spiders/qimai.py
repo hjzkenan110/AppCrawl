@@ -68,7 +68,6 @@ class QimaiSpider(scrapy.Spider):
 
             for nowPage in range(2, maxPage + 1):
                 url = GetDynamicAPI(page=nowPage, middle_url=1, genre=36).get_url()
-<<<<<<< HEAD
                 time.sleep(3)
                 yield scrapy.Request(url=url, headers=HEADER, cookies=cookiejar, callback=self.parse_detail)
         
@@ -76,13 +75,6 @@ class QimaiSpider(scrapy.Spider):
         page_info = json.loads(response.text)
         rank_info = page_info["rankInfo"]
         
-=======
-                yield scrapy.Request(url=url, cookies=cookiejar, callback=self.parse_detail)
-        
-    def parse_detail(self, response):
-        page_info = json.loads(response.text)
-        rank_info = page_info["rankInfo"]
->>>>>>> 3799fbc4abf287e45352812957705dc057da7e26
         for info in rank_info:
             app_info = info["appInfo"]
             item_loader = qimaiItemLoader(item=qimaiItem(), response=response)
