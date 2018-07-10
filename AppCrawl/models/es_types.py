@@ -16,6 +16,7 @@ class CustomAnalyzer(_CustomAnalyzer):
 ik_analyzer = CustomAnalyzer("ik_max_word", filter=["lowercase"])
 
 class QimaiType(DocType):
+    suggest = Completion(analyzer=ik_analyzer)
     appId = Keyword()
     appName = Text(analyzer="ik_max_word")
     icon = Keyword()

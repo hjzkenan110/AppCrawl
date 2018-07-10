@@ -3,14 +3,18 @@
 import codecs
 import json
 
+import pymysql
+from elasticsearch_dsl.connections import connections
 from twisted.enterprise import adbapi
 
-import pymysql
 from AppCrawl.models.es_types import QimaiType
+
+es = connections.create_connection(QimaiType._doc_type.using)
 
 class AppcrawlPipeline(object):
     def process_item(self, item, spider):
         return item
+
 
 class MysqlPipeline(object):
     #采用同步的机制写入mysql
@@ -26,6 +30,7 @@ class MysqlPipeline(object):
         self.cursor.execute(insert_sql, (item["appId"], item["appName"], item["icon"], item["publisher"], \
                                             item["country"], item["genre"], item["price"], item["releaseTime"],))
         self.conn.commit()
+
 
 class MysqlTwistedPipline(object):
     def __init__(self, dbpool):
@@ -61,6 +66,7 @@ class MysqlTwistedPipline(object):
         insert_sql, params = item.get_insert_sql()
         cursor.execute(insert_sql, params)
 
+
 class ElasticsearchPipeline(object):
     def process_item(self, item, spider):
         # 将item转换为es的数据
@@ -74,10 +80,27 @@ class ElasticsearchPipeline(object):
         appinfo.price = item["price"]
         appinfo.releaseTime = item["releaseTime"]
 
-        # title_suggest = self.gen_suggests(article.title, article.tags)
+        appinfo.suggest = gen_suggests(QimaiType._doc_type.index,  ((appinfo.appName,10),(appinfo.genre, 7)))
         # article.title_suggest = title_suggest
 
         appinfo.save()
-        return  item
+        return
 
-        
+
+def gen_suggests(index, info_tuple):
+    #根据字符串生成搜索建议数组
+    used_words = set()
+    suggests = []
+    for text, weight in info_tuple:
+        if text:
+            #调用es的analyze接口分析字符串
+            words = es.indices.analyze(index=index, params={'filter':["lowercase"]}, body=text)
+            anylyzed_words = set([r["token"] for r in words["tokens"] if len(r["token"])>1])
+            new_words = anylyzed_words - used_words
+        else:
+            new_words = set()
+
+        if new_words:
+            suggests.append({"input":list(new_words), "weight":weight})
+
+    return suggests
