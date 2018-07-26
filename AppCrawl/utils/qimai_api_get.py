@@ -5,9 +5,10 @@ import random
 import string
 import time
 from urllib.parse import urlencode, urljoin
+
+import requests
 from requests.cookies import RequestsCookieJar
 from requests.utils import dict_from_cookiejar
-import requests
 
 AGENT = "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:51.0) Gecko/20100101 Firefox/51.0"
 HEADER = {

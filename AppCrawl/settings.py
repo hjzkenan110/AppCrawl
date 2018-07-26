@@ -71,7 +71,8 @@ DOWNLOADER_MIDDLEWARES = {
 # Configure item pipelines
 # See https://doc.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
-   'AppCrawl.pipelines.MysqlTwistedPipline': 300,
+   # 'AppCrawl.pipelines.MysqlTwistedPipline': 2,
+   'AppCrawl.pipelines.ElasticsearchPipeline': 1
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)
@@ -97,4 +98,4 @@ ITEM_PIPELINES = {
 MYSQL_HOST = "127.0.0.1"
 MYSQL_DBNAME = "appdata"
 MYSQL_USER = "root"
-MYSQL_PASSWORD = "rexueyouxi666"
+MYSQL_PASSWORD = ""
